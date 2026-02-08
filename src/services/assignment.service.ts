@@ -86,6 +86,7 @@ export class AssignmentService {
       const assignmentData = {
         codeId: selectedCode.id,
         userId,
+        bookId: book.id,
         assignedAt: new Date(),
       };
       
@@ -183,6 +184,7 @@ export class AssignmentService {
       const assignmentData = {
         codeId: couponCode.id,
         userId,
+        bookId: couponCode.bookId,
         assignedAt: new Date(),
       };
       

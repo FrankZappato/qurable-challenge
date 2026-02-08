@@ -74,11 +74,35 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/v1/coupon-books/book-id-aqui",
+              "raw": "http://localhost:3000/api/v1/coupon-books/550e8400-e29b-41d4-a716-446655440000",
               "protocol": "http",
               "host": ["localhost"],
               "port": "3000",
-              "path": ["api", "v1", "coupon-books", "book-id-aqui"]
+              "path": ["api", "v1", "coupon-books", "550e8400-e29b-41d4-a716-446655440000"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /coupon-books/:id (Actualizar)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Verano 2026 (Actualizado)\",\n  \"description\": \"Cupones de descuento verano - actualizado\",\n  \"status\": \"ACTIVE\",\n  \"expiresAt\": \"2026-12-31T23:59:59Z\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupon-books/550e8400-e29b-41d4-a716-446655440000",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupon-books", "550e8400-e29b-41d4-a716-446655440000"]
             }
           },
           "response": []
@@ -100,7 +124,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"couponBookId\": \"book-id-aqui\",\n  \"quantity\": 100,\n  \"pattern\": \"SUMMER-{XXXX}\"\n}"
+              "raw": "{\n  \"bookId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"quantity\": 100,\n  \"prefix\": \"SUMMER-\",\n  \"length\": 8\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/v1/coupon-codes/generate",
@@ -113,24 +137,18 @@
           "response": []
         },
         {
-          "name": "POST /coupon-codes/upload (Subir CSV)",
+          "name": "POST /coupon-codes/upload (Carga JSON)",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "type": "file",
-                  "src": []
-                },
-                {
-                  "key": "couponBookId",
-                  "value": "book-id-aqui",
-                  "type": "text"
-                }
-              ]
+              "mode": "raw",
+              "raw": "{\n  \"bookId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"codes\": [\n    \"SUMMER-1234\",\n    \"SUMMER-5678\",\n    \"SUMMER-9012\"\n  ]\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/v1/coupon-codes/upload",
@@ -148,11 +166,11 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/v1/coupon-codes/book/book-id-aqui?status=AVAILABLE&limit=50",
+              "raw": "http://localhost:3000/api/v1/coupon-codes/book/550e8400-e29b-41d4-a716-446655440000?status=AVAILABLE&limit=50",
               "protocol": "http",
               "host": ["localhost"],
               "port": "3000",
-              "path": ["api", "v1", "coupon-codes", "book", "book-id-aqui"],
+              "path": ["api", "v1", "coupon-codes", "book", "550e8400-e29b-41d4-a716-446655440000"],
               "query": [
                 {
                   "key": "status",
@@ -184,7 +202,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"couponBookId\": \"book-id-aqui\",\n  \"userId\": \"user-juan\"\n}"
+              "raw": "{\n  \"bookId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"userId\": \"3b12f1df-5232-4f4c-9e2b-9c1a4e6c8d2a\"\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/v1/assignments/random",
@@ -208,7 +226,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+              "raw": "{\n  \"userId\": \"3b12f1df-5232-4f4c-9e2b-9c1a4e6c8d2a\"\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/v1/assignments/SUMMER-1234",
@@ -226,11 +244,11 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/v1/assignments/user/user-juan",
+              "raw": "http://localhost:3000/api/v1/assignments/user/3b12f1df-5232-4f4c-9e2b-9c1a4e6c8d2a",
               "protocol": "http",
               "host": ["localhost"],
               "port": "3000",
-              "path": ["api", "v1", "assignments", "user", "user-juan"]
+              "path": ["api", "v1", "assignments", "user", "3b12f1df-5232-4f4c-9e2b-9c1a4e6c8d2a"]
             }
           },
           "response": []
@@ -252,7 +270,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+              "raw": "{\n  \"userId\": \"3b12f1df-5232-4f4c-9e2b-9c1a4e6c8d2a\",\n  \"metadata\": {\n    \"channel\": \"postman\"\n  }\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/v1/coupons/SUMMER-1234/lock",
@@ -276,7 +294,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+              "raw": "{\n  \"userId\": \"3b12f1df-5232-4f4c-9e2b-9c1a4e6c8d2a\",\n  \"metadata\": {\n    \"channel\": \"postman\"\n  }\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/v1/coupons/SUMMER-1234/unlock",
@@ -300,7 +318,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+              "raw": "{\n  \"userId\": \"3b12f1df-5232-4f4c-9e2b-9c1a4e6c8d2a\",\n  \"metadata\": {\n    \"channel\": \"postman\"\n  }\n}"
             },
             "url": {
               "raw": "http://localhost:3000/api/v1/coupons/SUMMER-1234/redeem",
