@@ -48,4 +48,49 @@ docker-compose.override.yml
 *.db
 
 # Redis
-dump.rdb
+dump.rdbappendonly.aof*
+
+# Secrets and credentials
+.env*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p8
+*.pfx
+secrets.json
+credentials.json
+.aws/
+.azure/
+
+# Sensitive files
+.pgpass
+.netrc
+.ssh/
+private_key*
+secret_*
+
+# Backup files
+*.backup
+*.bak
+*.sql
+*.dump
+backup/
+backups/
+
+# OS generated files
+.vscode/settings.json
+.DS_Store/
+.env.backup
+
+# Test files with credentials
+src/__tests__/fixtures/*.env
+src/__tests__/fixtures/*.key
+
+# Terminal history
+.bash_history
+.zsh_history
+.history
+
+# pgAdmin backups
+pgadmin_data/
