@@ -1096,7 +1096,292 @@ Usuario B: Error: "Ya fue usado"
         </div>
     </div>
 
-    <!-- SLIDE 25: CONCLUSIONES -->
+    <!-- SLIDE 25: SEGURIDAD - ESTADO ACTUAL -->
+    <div class="slide">
+        <h1>🔐 Seguridad & Autenticación</h1>
+        <p class="subtitle">Estado Actual: ⚠️ Sin implementar (Riesgo para Producción)</p>
+
+        <h3 style="color: #dc3545; margin-top: 40px;">Problemas Actuales</h3>
+        <div class="grid-2">
+            <div class="card" style="border-left-color: #dc3545;">
+                <h4>❌ Sin Autenticación</h4>
+                <ul style="margin-left: 20px;">
+                    <li>Cualquiera puede acceder a endpoints</li>
+                    <li>Sin identificación de usuarios</li>
+                    <li>Sin control de acceso</li>
+                </ul>
+            </div>
+            <div class="card" style="border-left-color: #dc3545;">
+                <h4>❌ Sin Autorización</h4>
+                <ul style="margin-left: 20px;">
+                    <li>Usuario A accede a cupones de Usuario B</li>
+                    <li>Sin roles (admin, usuario, soporte)</li>
+                    <li>Sin permisos granulares</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 style="color: #dc3545; margin-top: 40px;">Riesgos Críticos</h3>
+        <ul>
+            <li><strong>Fraude:</strong> Redimir cupones ajenos</li>
+            <li><strong>Privacidad:</strong> Acceso a datos de otros usuarios</li>
+            <li><strong>Cumplimiento:</strong> No GDPR-compliant</li>
+            <li><strong>Reputación:</strong> Brechas de seguridad</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 26: SEGURIDAD - SOLUCIÓN PROPUESTA -->
+    <div class="slide">
+        <h1>✅ Solución: JWT + Roles</h1>
+
+        <h2>Arquitectura de Seguridad</h2>
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+Cliente (UI)
+    ↓ (credenciales)
+API Gateway (HTTPS + WAF)
+    ↓ (valida JWT)
+Authentication Middleware
+    ↓ (verifica firma)
+Authorization Middleware
+    ↓ (chequea permisos)
+Business Logic (Controllers)
+    ↓
+Database (auditoría)
+        </div>
+
+        <h3>Stack de Seguridad</h3>
+        <div class="grid-3">
+            <div class="card">
+                <h4>🔑 JWT</h4>
+                <p>Tokens sin estado</p>
+                <p style="font-size: 0.9em; color: #666;">15 min access + 30 días refresh</p>
+            </div>
+            <div class="card">
+                <h4>👥 Roles</h4>
+                <p>Admin, Business Owner</p>
+                <p style="font-size: 0.9em; color: #666;">User, Support (4 niveles)</p>
+            </div>
+            <div class="card">
+                <h4>🛡️ bcrypt</h4>
+                <p>Hashing de contraseñas</p>
+                <p style="font-size: 0.9em; color: #666;">10 rounds, salt automático</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 30px;">Ventajas</h3>
+        <ul>
+            <li>✅ <strong>Stateless:</strong> Escalable horizontalmente</li>
+            <li>✅ <strong>Estándar:</strong> JWT es industria standard</li>
+            <li>✅ <strong>Flexible:</strong> Fácil agregar 2FA, OAuth2 después</li>
+            <li>✅ <strong>Auditable:</strong> Todas las acciones logged</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 27: SEGURIDAD - FLUJO DE LOGIN -->
+    <div class="slide">
+        <h1>🔑 Flujo de Autenticación JWT</h1>
+
+        <h3>1. Registro (POST /auth/register)</h3>
+        <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <strong>Request:</strong> { email, password, firstName, lastName }
+            <br/>
+            <strong>Backend:</strong> Hash password con bcrypt → Guardar en DB
+            <br/>
+            <strong>Response:</strong> { accessToken, refreshToken, user }
+        </div>
+
+        <h3>2. Login (POST /auth/login)</h3>
+        <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <strong>Request:</strong> { email, password }
+            <br/>
+            <strong>Backend:</strong> Validar credenciales → Generar JWT firmado
+            <br/>
+            <strong>Response:</strong> { accessToken, refreshToken, user, expiresIn: 900 }
+        </div>
+
+        <h3>3. Llamar Endpoint Protegido</h3>
+        <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <strong>Request:</strong> Authorization: Bearer &lt;accessToken&gt;
+            <br/>
+            <strong>Backend:</strong> Verificar firma JWT → Extraer userId, role
+            <br/>
+            <strong>Middleware Auth:</strong> Chequear permisos por rol
+            <br/>
+            <strong>Response:</strong> Datos si OK, 403 si sin permiso
+        </div>
+
+        <h3>4. Refresh Token (POST /auth/refresh)</h3>
+        <div style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <strong>Cuando:</strong> AccessToken expirado (15 min)
+            <br/>
+            <strong>Request:</strong> { refreshToken }
+            <br/>
+            <strong>Backend:</strong> Validar refresh token (30 días) → Generar nuevo access token
+        </div>
+    </div>
+
+    <!-- SLIDE 28: SEGURIDAD - ROLES Y PERMISOS -->
+    <div class="slide">
+        <h1>👥 Matriz de Roles & Permisos</h1>
+
+        <table style="width: 100%; margin-top: 20px; font-size: 0.95em;">
+            <tr style="background: #667eea; color: white;">
+                <th>Endpoint</th>
+                <th>Admin</th>
+                <th>B.Owner</th>
+                <th>User</th>
+                <th>Support</th>
+            </tr>
+            <tr>
+                <td><strong>POST /coupon-books</strong></td>
+                <td>✅</td>
+                <td>✅ Propios</td>
+                <td>❌</td>
+                <td>❌</td>
+            </tr>
+            <tr style="background: #f9f9f9;">
+                <td><strong>GET /coupon-books</strong></td>
+                <td>✅</td>
+                <td>✅ Propios</td>
+                <td>✅ Asignados</td>
+                <td>✅</td>
+            </tr>
+            <tr>
+                <td><strong>PATCH /coupon-books/:id</strong></td>
+                <td>✅</td>
+                <td>✅ Propios</td>
+                <td>❌</td>
+                <td>❌</td>
+            </tr>
+            <tr style="background: #f9f9f9;">
+                <td><strong>POST /assignments/random</strong></td>
+                <td>✅</td>
+                <td>✅ Propios</td>
+                <td>❌</td>
+                <td>❌</td>
+            </tr>
+            <tr>
+                <td><strong>POST /coupons/:code/lock</strong></td>
+                <td>✅</td>
+                <td>✅</td>
+                <td>✅ Propios</td>
+                <td>❌</td>
+            </tr>
+            <tr style="background: #f9f9f9;">
+                <td><strong>POST /coupons/:code/redeem</strong></td>
+                <td>✅</td>
+                <td>✅</td>
+                <td>✅ Propios</td>
+                <td>❌</td>
+            </tr>
+            <tr>
+                <td><strong>GET /audit-logs</strong></td>
+                <td>✅</td>
+                <td>✅ Propios</td>
+                <td>❌</td>
+                <td>✅ Lectura</td>
+            </tr>
+        </table>
+
+        <div style="margin-top: 30px; padding: 15px; background: #fff3cd; border-radius: 5px;">
+            <strong style="color: #856404;">💡 Niveles de Acceso:</strong>
+            <ul style="margin-left: 30px;">
+                <li><strong>Total:</strong> Admin - todo</li>
+                <li><strong>Propios:</strong> Solo recursos creados por el usuario</li>
+                <li><strong>Asignados:</strong> Solo cupones asignados al usuario</li>
+                <li><strong>Lectura:</strong> Solo pueden leer, no modificar</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- SLIDE 29: SEGURIDAD - IMPLEMENTACIÓN -->
+    <div class="slide">
+        <h1>🛠️ Plan de Implementación</h1>
+
+        <h3>Fase 1: Setup Base (2-3 horas)</h3>
+        <div class="card">
+            <ul style="margin-left: 20px;">
+                <li>Crear User entity en TypeORM</li>
+                <li>Instalar jsonwebtoken + bcryptjs</li>
+                <li>Crear JWT service (sign, verify)</li>
+                <li>Crear auth controller (login, register, refresh)</li>
+            </ul>
+        </div>
+
+        <h3>Fase 2: Middlewares (1-2 horas)</h3>
+        <div class="card">
+            <ul style="margin-left: 20px;">
+                <li>Authentication middleware (verifica JWT)</li>
+                <li>Authorization middleware (chequea roles)</li>
+                <li>Error handling para auth errors</li>
+                <li>Rate limiting para login</li>
+            </ul>
+        </div>
+
+        <h3>Fase 3: Protección de Endpoints (2-3 horas)</h3>
+        <div class="card">
+            <ul style="margin-left: 20px;">
+                <li>Agregar @authenticationMiddleware a todas las routes</li>
+                <li>Agregar @authorizationMiddleware con roles</li>
+                <li>Validación en controllers para "propios"</li>
+                <li>Auditoría de acciones</li>
+            </ul>
+        </div>
+
+        <h3>Fase 4: Testing & Docs (1-2 horas)</h3>
+        <div class="card">
+            <ul style="margin-left: 20px;">
+                <li>Tests unitarios para JWT</li>
+                <li>Tests de integración para auth flow</li>
+                <li>Actualizar Postman collection</li>
+                <li>Documentación de endpoints auth</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; padding: 15px; background: #d4edda; border-radius: 5px; text-align: center;">
+            <strong style="color: #155724;">⏱️ Tiempo Total Estimado: 6-10 horas</strong>
+            <p style="margin-top: 10px; font-size: 0.95em;">Puede hacerse en 1-2 sprints sin afectar funcionalidad actual</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 30: SEGURIDAD - EJEMPLO DE CÓDIGO -->
+    <div class="slide">
+        <h1>💻 Ejemplo: JWT Service</h1>
+
+        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 0.85em;">
+<span style="color: #66d9ef;">export class</span> JWTService {
+  <span style="color: #66d9ef;">generateAccessToken</span>(userId: <span style="color: #a1efe4;">string</span>, email: <span style="color: #a1efe4;">string</span>, role: <span style="color: #a1efe4;">string</span>): <span style="color: #a1efe4;">string</span> {
+    <span style="color: #66d9ef;">const</span> payload = {
+      sub: userId,
+      email,
+      role,
+      exp: Math.floor(Date.now() / <span style="color: #e6db74;">1000</span>) + <span style="color: #e6db74;">900</span> <span style="color: #75715e;">// 15 min</span>
+    };
+    <span style="color: #66d9ef;">return</span> jwt.sign(payload, process.env.JWT_SECRET);
+  }
+
+  <span style="color: #66d9ef;">verifyAccessToken</span>(token: <span style="color: #a1efe4;">string</span>): JWTPayload | <span style="color: #a1efe4;">null</span> {
+    <span style="color: #66d9ef;">try</span> {
+      <span style="color: #66d9ef;">return</span> jwt.verify(token, process.env.JWT_SECRET);
+    } <span style="color: #66d9ef;">catch</span> {
+      <span style="color: #66d9ef;">return</span> <span style="color: #ae81ff;">null</span>;
+    }
+  }
+}
+        </pre>
+
+        <h3 style="margin-top: 20px;">Uso en Controller</h3>
+        <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 0.85em;">
+router.post(
+  <span style="color: #e6db74;">'/:id'</span>,
+  authenticationMiddleware,              <span style="color: #75715e;">// ✅ Verifica JWT</span>
+  authorizationMiddleware(<span style="color: #e6db74;">'business_owner'</span>), <span style="color: #75715e;">// ✅ Chequea rol</span>
+  controller.update.bind(controller)
+);
+        </pre>
+    </div>
+
+    <!-- SLIDE 31: CONCLUSIONES -->
     <div class="slide">
         <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
             <h1>✅ Qurable - 100% Completo</h1>
