@@ -5,7 +5,7 @@
 
 Base de Datos: coupon_service
 Usuario: qurable
-Contraseña: qurable_dev_password
+Contraseña: [FROM_ENV_FILE]
 Puerto: 5432
 
 ═════════════════════════════════════════════════════════════════════════════════
@@ -350,7 +350,7 @@ OPCIÓN 1: pgAdmin (UI Visual)
 │ • Hostname: qurable-postgres       │
 │ • Port: 5432                       │
 │ • User: qurable                    │
-│ • Password: qurable_dev_password   │
+│ • Password: [FROM_ENV_FILE]         │
 │ • Database: coupon_service         │
 └────────────────────────────────────┘
 
