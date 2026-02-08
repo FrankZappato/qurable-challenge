@@ -51,6 +51,8 @@ export class CouponBookService {
     if (dto.description !== undefined) book.description = dto.description;
     if (dto.status) book.status = dto.status;
     if (dto.expiresAt) book.expiresAt = new Date(dto.expiresAt);
+    if (dto.maxRedeemsPerUser !== undefined) book.maxRedeemsPerUser = dto.maxRedeemsPerUser;
+    if (dto.maxCodesPerUser !== undefined) book.maxCodesPerUser = dto.maxCodesPerUser;
 
     return await this.bookRepo.save(book);
   }

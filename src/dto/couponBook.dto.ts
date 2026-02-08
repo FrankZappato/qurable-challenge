@@ -19,6 +19,8 @@ export const updateCouponBookSchema = z.object({
   name: z.string().min(3).max(255).optional(),
   description: z.string().optional(),
   status: z.nativeEnum(CouponBookStatus).optional(),
+  maxRedeemsPerUser: z.number().int().positive().nullable().optional(),
+  maxCodesPerUser: z.number().int().positive().nullable().optional(),
   expiresAt: z.string().datetime().optional(),
 });
 
