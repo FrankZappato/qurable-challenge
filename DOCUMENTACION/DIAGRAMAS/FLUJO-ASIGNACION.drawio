@@ -1,0 +1,55 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0">
+  <diagram id="flow-diagram" name="Assignment Flow">
+    <mxGraphModel dx="694" dy="597" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1E88E5;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;Start&lt;br&gt;POST /assignments/random&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="60" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="validate" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#43A047;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;Validate Book + Quota&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="60" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="pick" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#FB8C00;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;Pick Random AVAILABLE Code&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="60" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="tx" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#8E24AA;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;BEGIN TX + SELECT FOR UPDATE&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="220" x="60" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="update" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#039BE5;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;Update status = ASSIGNED&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="60" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="insert" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#43A047;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;Insert coupon_assignment&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="60" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="commit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF8E1;strokeColor=#F9A825;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;COMMIT&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="220" x="60" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1E88E5;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(6, 6, 6));&quot;&gt;201 Created (Assignment Response)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="260" x="60" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" style="endArrow=block;html=1;" target="validate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="validate" style="endArrow=block;html=1;" target="pick">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="pick" style="endArrow=block;html=1;" target="tx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="tx" style="endArrow=block;html=1;" target="update">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="update" style="endArrow=block;html=1;" target="insert">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="insert" style="endArrow=block;html=1;" target="commit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="commit" style="endArrow=block;html=1;" target="resp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

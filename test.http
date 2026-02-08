@@ -1,0 +1,121 @@
+### Health Check
+GET http://localhost:3000/health
+
+### Ping
+GET http://localhost:3000/api/v1/ping
+
+### Create Coupon Book
+POST http://localhost:3000/api/v1/coupon-books
+Content-Type: application/json
+
+{
+  "businessId": "123e4567-e89b-12d3-a456-426614174000",
+  "name": "Verano 2026",
+  "description": "Cupones de descuento verano",
+  "maxRedeemsPerUser": 1
+}
+
+### Get All Coupon Books
+GET http://localhost:3000/api/v1/coupon-books
+
+### Get Coupon Book by ID (replace {id} with actual ID)
+GET http://localhost:3000/api/v1/coupon-books/4d28b6c6-9183-47aa-9140-4e5f5fcf101e
+
+### Update Coupon Book (replace {id} with actual ID)
+PATCH http://localhost:3000/api/v1/coupon-books/4d28b6c6-9183-47aa-9140-4e5f5fcf101e
+Content-Type: application/json
+
+{
+  "status": "ACTIVE"
+}
+
+### Generate Random Coupon Codes
+POST http://localhost:3000/api/v1/coupon-codes/generate
+Content-Type: application/json
+
+{
+  "bookId": "76fafd1e-332b-47bf-a345-a60ef2e65b23",
+  "quantity": 100,
+  "prefix": "SUMMER2026",
+  "length": 6
+}
+
+### Upload Bulk Coupon Codes
+POST http://localhost:3000/api/v1/coupon-codes/upload
+Content-Type: application/json
+
+{
+  "bookId": "76fafd1e-332b-47bf-a345-a60ef2e65b23",
+  "codes": ["CODE001", "CODE002", "CODE003", "CODE004", "CODE005"]
+}
+
+### Get Codes for Coupon Book
+GET http://localhost:3000/api/v1/coupon-codes/book/76fafd1e-332b-47bf-a345-a60ef2e65b23?limit=50&offset=0
+
+### Get Available Codes Only
+GET http://localhost:3000/api/v1/coupon-codes/book/76fafd1e-332b-47bf-a345-a60ef2e65b23?status=AVAILABLE
+
+### ========================================
+### ASSIGNMENT ENDPOINTS
+### ========================================
+
+### Assign Random Code from Book to User
+POST http://localhost:3000/api/v1/assignments/random
+Content-Type: application/json
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "bookId": "76fafd1e-332b-47bf-a345-a60ef2e65b23"
+}
+
+### Assign Specific Code to User
+POST http://localhost:3000/api/v1/assignments/SUMMER2026ABC123
+Content-Type: application/json
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+### Get User Assignments
+GET http://localhost:3000/api/v1/assignments/user/550e8400-e29b-41d4-a716-446655440000
+
+### ========================================
+### LOCK/UNLOCK ENDPOINTS
+### ========================================
+
+### Lock a Coupon Code
+POST http://localhost:3000/api/v1/coupons/SUMMER2026ABC123/lock
+Content-Type: application/json
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "metadata": {
+    "reason": "checkout_started",
+    "orderId": "ORDER-1001"
+  }
+}
+
+### Unlock a Coupon Code
+POST http://localhost:3000/api/v1/coupons/SUMMER2026ABC123/unlock
+Content-Type: application/json
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "metadata": {
+    "reason": "checkout_cancelled",
+    "orderId": "ORDER-1001"
+  }
+}
+
+### Redeem a Coupon Code
+POST http://localhost:3000/api/v1/coupons/SUMMER2026ABC123/redeem
+Content-Type: application/json
+
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "metadata": {
+    "reason": "checkout_completed",
+    "orderId": "ORDER-1001",
+    "amount": 50.00
+  }
+}

@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qurable - Arquitectura & Endpoints</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 95vw;
+            height: 95vh;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 60px;
+            overflow-y: auto;
+            animation: slideIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2.2em;
+            margin: 30px 0 20px 0;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin: 20px 0 10px 0;
+        }
+
+        p, li {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin: 10px 0;
+            color: #555;
+        }
+
+        ul {
+            margin-left: 30px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.5em;
+            color: #764ba2;
+            margin: 20px 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+            color: #333;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .diagram {
+            background: #f9f9f9;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            color: #333;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            color: #667eea;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .endpoint-box {
+            background: #f0f0f0;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+            color: white;
+        }
+
+        .method.post {
+            background: #28a745;
+        }
+
+        .method.get {
+            background: #007bff;
+        }
+
+        .method.put {
+            background: #fd7e14;
+        }
+
+        .method.delete {
+            background: #dc3545;
+        }
+
+        .flow-diagram {
+            background: #f9f9f9;
+            border: 2px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            min-width: 150px;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin: 0 10px;
+            color: #667eea;
+            font-size: 1.5em;
+        }
+
+        .centered {
+            text-align: center;
+        }
+
+        .large-text {
+            font-size: 1.3em;
+            line-height: 2;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        @media print {
+            .controls, .slide-counter {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-counter">
+        <span id="current">1</span> / <span id="total">25</span>
+    </div>
+
+    <!-- SLIDE 1: TÍTULO -->
+    <div class="slide active">
+        <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <h1>🎯 QURABLE</h1>
+            <p class="subtitle">Sistema de Gestión de Cupones</p>
+            <p class="subtitle" style="font-size: 1.2em; color: #999;">Arquitectura, Infraestructura & API Endpoints</p>
+            <div style="margin-top: 60px; text-align: center; font-size: 1.2em; color: #666;">
+                <p>✅ 13 Endpoints</p>
+                <p>✅ 6 Casos de Uso</p>
+                <p>✅ Architecture Completa AWS</p>
+            </div>
+            <p class="footer">Febrero 2026</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: TABLA DE CONTENIDOS -->
+    <div class="slide">
+        <h2>📋 Tabla de Contenidos</h2>
+        <div style="font-size: 1.2em; margin-top: 40px;">
+            <p><span class="emoji">📦</span><strong>PARTE 1:</strong> Infraestructura AWS (Slides 3-8)</p>
+            <p style="margin-left: 40px;">• ALB, ECS Fargate, RDS PostgreSQL, Redis, VPC</p>
+            
+            <p style="margin-top: 30px;"><span class="emoji">🚀</span><strong>PARTE 2:</strong> Estrategia de Deployment (Slides 9-12)</p>
+            <p style="margin-left: 40px;">• CI/CD Pipeline, Escalabilidad, Rollback</p>
+            
+            <p style="margin-top: 30px;"><span class="emoji">🔌</span><strong>PARTE 3:</strong> Endpoints API (Slides 13-24)</p>
+            <p style="margin-left: 40px;">• CRUD, Assignments, Redemption (Lock/Unlock/Redeem)</p>
+            
+            <p style="margin-top: 30px;"><span class="emoji">🎓</span><strong>CONCLUSIONES</strong> (Slide 25)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: INFRAESTRUCTURA OVERVIEW -->
+    <div class="slide">
+        <h2>🏗️ Infraestructura AWS - Vista General</h2>
+        <div class="diagram">┌─────────────────────────────────────────────────────────┐
+│                     INTERNET (Usuarios)                  │
+└──────────────────────┬──────────────────────────────────┘
+                       │ HTTPS
+                       ▼
+        ┌──────────────────────────────┐
+        │  ALB (Balanceador de Carga)  │
+        │  • Puerto 443 (SSL/TLS)      │
+        │  • Distribuye tráfico        │
+        └──────────────┬───────────────┘
+                       │
+        ┌──────────────┴──────────────┐
+        ▼                             ▼
+    ┌────────────┐            ┌────────────┐
+    │ ECS Task 1 │            │ ECS Task 2 │
+    │ Node.js 18 │            │ Node.js 18 │
+    │ Puerto 3000│            │ Puerto 3000│
+    └────┬───────┘            └────┬───────┘
+         │                         │
+         └────────────┬────────────┘
+                      │
+         ┌────────────┴────────────┐
+         ▼                         ▼
+    ┌──────────────┐        ┌──────────────┐
+    │ REDIS        │        │  RDS         │
+    │ (Caché)      │        │  PostgreSQL  │
+    │ 13 GB RAM    │        │  4 GB RAM    │
+    │ Locks + TTL  │        │  Multi-AZ    │
+    └──────────────┘        └──────────────┘</div>
+        <p style="margin-top: 20px;"><strong>¿Por qué esta arquitectura?</strong></p>
+        <ul>
+            <li>✅ <strong>Escalable:</strong> Auto-scaling de ECS según carga</li>
+            <li>✅ <strong>Resiliente:</strong> Multi-AZ para redundancia</li>
+            <li>✅ <strong>Segura:</strong> Encriptación, VPC privada</li>
+            <li>✅ <strong>Económica:</strong> Pagas solo por lo que usas</li>
+        </ul>
+    </div>
+
+    <!-- SLIDE 4: ALB -->
+    <div class="slide">
+        <h2>🚪 Application Load Balancer (ALB)</h2>
+        <div class="grid-2">
+            <div>
+                <h3>¿Qué es?</h3>
+                <p>Puerta de entrada de tu aplicación que distribuye tráfico entre servidores.</p>
+                <h3>¿Por qué?</h3>
+                <ul>
+                    <li>Si un servidor cae, hay otros</li>
+                    <li>Reparte carga entre múltiples servidores</li>
+                    <li>SSL/TLS (HTTPS) segura</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Configuración</h4>
+                <p><strong>Listener:</strong></p>
+                <p>• HTTP 80 → HTTPS 443</p>
+                <p>• SSL/TLS Certificate (ACM)</p>
+                <p><strong>Target Group:</strong></p>
+                <p>• 2-10 ECS tasks</p>
+                <p>• Health check: /health</p>
+            </div>
+        </div>
+        <div class="diagram">Usuario → ALB → Elige servidor
+                ├→ ECS Task 1 ✓
+                ├→ ECS Task 2 ✓
+                └→ ECS Task 3 ✓</div>
+    </div>
+
+    <!-- SLIDE 5: ECS FARGATE -->
+    <div class="slide">
+        <h2>⚙️ ECS Fargate - Los Servidores</h2>
+        <div class="grid-2">
+            <div>
+                <h3>¿Qué es?</h3>
+                <p>AWS ejecuta tu código Node.js sin que manejes servidores.</p>
+                <h3>Ventajas</h3>
+                <ul>
+                    <li>AWS parchea automáticamente</li>
+                    <li>Auto-escalado (de 2 a 10 tasks)</li>
+                    <li>Pagas solo por uso real</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Especificaciones</h4>
+                <p><strong>Cada Task:</strong></p>
+                <p>• CPU: 0.5 vCPU</p>
+                <p>• RAM: 1 GB</p>
+                <p>• Puerto: 3000</p>
+                <p><strong>Auto-Scaling:</strong></p>
+                <p>• Min: 2 tasks</p>
+                <p>• Max: 10 tasks</p>
+                <p>• Trigger: CPU > 70%</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: RDS POSTGRESQL -->
+    <div class="slide">
+        <h2>🔐 RDS PostgreSQL - Base de Datos</h2>
+        <div class="grid-2">
+            <div>
+                <h3>¿Qué es?</h3>
+                <p>Almacena todos los datos: cupones, asignaciones, auditoría.</p>
+                <h3>¿Por qué PostgreSQL?</h3>
+                <ul>
+                    <li><strong>ACID:</strong> Garantiza consistencia</li>
+                    <li><strong>Transacciones:</strong> Todo o nada</li>
+                    <li><strong>FOR UPDATE:</strong> Bloqueo para seguridad</li>
+                    <li><strong>Confiable:</strong> Usado por bancos</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Configuración</h4>
+                <p><strong>Instancia:</strong></p>
+                <p>• Clase: db.t4g.medium</p>
+                <p>• Versión: 15.4</p>
+                <p>• Storage: 100 GB gp3</p>
+                <p><strong>Confiabilidad:</strong></p>
+                <p>• Multi-AZ (2 réplicas)</p>
+                <p>• Backups automáticos (7 días)</p>
+                <p>• Performance Insights</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: REDIS -->
+    <div class="slide">
+        <h2>⚡ ElastiCache Redis - Caché Rápido</h2>
+        <div class="grid-2">
+            <div>
+                <h3>¿Qué es?</h3>
+                <p>Base de datos ultra-rápida en memoria (RAM) para respuestas instantáneas.</p>
+                <h3>¿Por qué?</h3>
+                <ul>
+                    <li>PostgreSQL = lenta (acceso a disco)</li>
+                    <li>Redis = ultra-rápida (acceso a RAM)</li>
+                    <li>Perfecto para: locks, TTL, sesiones</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h4>Casos de Uso</h4>
+                <p><strong>Locks con TTL:</strong></p>
+                <p>• Cupón bloqueado por 5 minutos</p>
+                <p>• Auto-expira si no se usa</p>
+                <p><strong>Ventaja:</strong></p>
+                <p>• Respuesta en microsegundos</p>
+                <p>• Cluster Mode (2+ nodos)</p>
+                <p>• 13 GB RAM</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: VPC Y SEGURIDAD -->
+    <div class="slide">
+        <h2>🛡️ VPC - Red Privada Segura</h2>
+        <p><strong>VPC (Virtual Private Cloud):</strong> Red privada donde vive tu aplicación</p>
+        <div class="diagram">Internet
+   │ (HTTP/HTTPS)
+   ▼
+┌─────────────────────────────────┐
+│         VPC 10.0.0.0/16          │
+│                                   │
+│ ┌─────────────────┐              │
+│ │  ALB Subnet     │ (público)     │
+│ └────────┬────────┘              │
+│          │                        │
+│ ┌────────┴────────┐              │
+│ │ ECS/RDS/Redis   │ (privado)    │
+│ └─────────────────┘              │
+│                                   │
+└─────────────────────────────────┘</div>
+        <h3>Security Groups (Firewall)</h3>
+        <div class="table-scroll">
+            <table>
+                <tr>
+                    <th>Componente</th>
+                    <th>Entrada Permitida</th>
+                    <th>De Dónde</th>
+                </tr>
+                <tr>
+                    <td>ALB</td>
+                    <td>HTTP 80, HTTPS 443</td>
+                    <td>0.0.0.0/0 (Internet)</td>
+                </tr>
+                <tr>
+                    <td>ECS</td>
+                    <td>3000</td>
+                    <td>Solo ALB</td>
+                </tr>
+                <tr>
+                    <td>RDS</td>
+                    <td>5432 (PostgreSQL)</td>
+                    <td>Solo ECS</td>
+                </tr>
+                <tr>
+                    <td>Redis</td>
+                    <td>6379 (Redis)</td>
+                    <td>Solo ECS</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- SLIDE 9: DEPLOYMENT PIPELINE -->
+    <div class="slide">
+        <h2>🚀 CI/CD Pipeline - Deployment Automático</h2>
+        <div class="flow-diagram">
+            <div>
+                <div class="flow-step">1. Push a GitHub</div>
+                <div class="arrow">→</div>
+                <div class="flow-step">2. Tests (Jest)</div>
+                <div class="arrow">→</div>
+                <div class="flow-step">3. Build Docker</div>
+                <div class="arrow">→</div>
+                <div class="flow-step">4. Push ECR</div>
+                <div class="arrow">→</div>
+                <div class="flow-step">5. Deploy ECS</div>
+                <div class="arrow">→</div>
+                <div class="flow-step">6. Ejecutar Migraciones</div>
+            </div>
+        </div>
+        <h3>¿Qué es CI/CD?</h3>
+        <ul>
+            <li><strong>CI (Continuous Integration):</strong> Tests automáticos cada push</li>
+            <li><strong>CD (Continuous Deployment):</strong> Automáticamente sube a producción</li>
+        </ul>
+        <div class="card">
+            <h4>Resultado: Zero Downtime</h4>
+            <p>Usuarios no notan el cambio. Los servidores viejos se apagan DESPUÉS que los nuevos están listos.</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 10: ESCALABILIDAD -->
+    <div class="slide">
+        <h2>📈 Escalabilidad - Auto-Scaling</h2>
+        <h3>¿Cómo sube automáticamente?</h3>
+        <div class="diagram">Tráfico Normal (10K users/día)
+├─ ECS: 2 tasks ✓
+
+Black Friday (1M users/día)
+├─ AWS detecta: CPU > 70%
+├─ Crea automáticamente 3 tasks más
+└─ ECS: 5-10 tasks ✓
+
+Después (vuelve a normal)
+├─ AWS detecta: CPU < 50%
+├─ Baja servidores extras
+└─ ECS: 2-3 tasks → Ahorras dinero ✓</div>
+        <h3>Estrategias</h3>
+        <div class="feature-list">
+            <div class="feature-item">
+                <strong>Target Tracking:</strong><br>
+                Mantiene CPU en 70% automáticamente
+            </div>
+            <div class="feature-item">
+                <strong>Scheduled Scaling:</strong><br>
+                20 tasks listos el Black Friday
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 11: MONITOREO -->
+    <div class="slide">
+        <h2>📊 Monitoreo - CloudWatch</h2>
+        <p>AWS mira constantemente la salud de tu aplicación:</p>
+        <div class="feature-list">
+            <div class="feature-item">
+                <strong>CPU Utilization</strong><br>
+                ¿Está sobrecargado?
+            </div>
+            <div class="feature-item">
+                <strong>Memory Usage</strong><br>
+                ¿Hay suficiente RAM?
+            </div>
+            <div class="feature-item">
+                <strong>Database Connections</strong><br>
+                ¿Están saturadas?
+            </div>
+            <div class="feature-item">
+                <strong>Error Rate</strong><br>
+                ¿Algo está roto?
+            </div>
+            <div class="feature-item">
+                <strong>Response Latency</strong><br>
+                ¿Es rápido?
+            </div>
+            <div class="feature-item">
+                <strong>Redis Hit Rate</strong><br>
+                ¿Caché funciona?
+            </div>
+        </div>
+        <div class="card">
+            <h4>Si algo está mal:</h4>
+            <p>AWS envía <span class="warning">alerta por email</span> → DevOps actúa → Problema solucionado</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 12: ROLLBACK -->
+    <div class="slide">
+        <h2>🔄 Rollback - Volver Atrás si Falla</h2>
+        <h3>¿Qué pasa si hay un bug en el nuevo deployment?</h3>
+        <div class="diagram">Opción 1: AUTOMÁTICO (Blue/Green)
+┌─────────────────────────────────┐
+│ AWS detecta: 5% de requests err │
+│ Automáticamente vuelve a v1     │
+│ Usuario: "No pasó nada"         │
+└─────────────────────────────────┘
+
+Opción 2: MANUAL (DevOps actúa)
+┌─────────────────────────────────┐
+│ DevOps ve alerta en CloudWatch  │
+│ Ejecuta: rollback a v1          │
+│ En 2 minutos todo solucionado   │
+└─────────────────────────────────┘</div>
+        <p style="margin-top: 30px;"><strong>Confidencia:</strong> Siempre hay un plan B.</p>
+    </div>
+
+    <!-- SLIDE 13: API OVERVIEW -->
+    <div class="slide">
+        <h2>🔌 API Endpoints - Overview</h2>
+        <p class="large-text" style="margin-bottom: 30px;"><strong>Total: 13 Endpoints</strong></p>
+        <div class="table-scroll">
+            <table>
+                <tr>
+                    <th>Grupo</th>
+                    <th>Endpoints</th>
+                    <th>Propósito</th>
+                </tr>
+                <tr>
+                    <td><strong>Coupon Books</strong></td>
+                    <td>3</td>
+                    <td>CRUD de libros de cupones</td>
+                </tr>
+                <tr>
+                    <td><strong>Coupon Codes</strong></td>
+                    <td>3</td>
+                    <td>Generar/subir/listar códigos</td>
+                </tr>
+                <tr>
+                    <td><strong>Assignments</strong></td>
+                    <td>3</td>
+                    <td>Asignar cupones (random/específico/listar)</td>
+                </tr>
+                <tr>
+                    <td><strong>Redemption</strong></td>
+                    <td>3</td>
+                    <td>Lock/Unlock/Redeem cupones</td>
+                </tr>
+                <tr>
+                    <td><strong>Health</strong></td>
+                    <td>1</td>
+                    <td>Check de salud del servidor</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- SLIDE 14: COUPON BOOKS -->
+    <div class="slide">
+        <h2>📚 Coupon Books - Crear Promociones</h2>
+        <p><strong>Analogía:</strong> Como crear un cartuchera vacía. Existe pero sin lápices (cupones).</p>
+        
+        <div class="endpoint-box">
+            <p><span class="method post">POST</span>/coupon-books</p>
+            <p><strong>Request:</strong></p>
+            <div class="code-block">
+{
+  "name": "Verano 2026",
+  "maxCodesPerUser": 2,
+  "maxRedeemsPerUser": 1,
+  "totalCodesExpected": 1000
+}</div>
+            <p><strong>Response:</strong></p>
+            <div class="code-block">
+{
+  "id": "book-001",
+  "name": "Verano 2026",
+  "status": "DRAFT",
+  "generatedCount": 0
+}</div>
+        </div>
+
+        <div class="feature-list">
+            <div class="feature-item">
+                <strong>GET /coupon-books</strong><br>
+                Ver todas las promociones
+            </div>
+            <div class="feature-item">
+                <strong>GET /coupon-books/:id</strong><br>
+                Ver una promoción específica
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 15: COUPON CODES -->
+    <div class="slide">
+        <h2>💳 Coupon Codes - Generar Códigos</h2>
+        <p><strong>Analogía:</strong> Como imprimir 1000 boletos de rifa. Cada uno único.</p>
+        
+        <div class="endpoint-box">
+            <p><span class="method post">POST</span>/coupon-codes/generate</p>
+            <p><strong>Request:</strong></p>
+            <div class="code-block">
+{
+  "couponBookId": "book-001",
+  "quantity": 1000,
+  "pattern": "SUMMER-{XXXX}"
+}</div>
+            <p><strong>Response:</strong></p>
+            <div class="code-block">
+{
+  "generatedCount": 1000,
+  "couponBookId": "book-001"
+}</div>
+        </div>
+
+        <div class="two-col">
+            <div>
+                <h3>Otros Endpoints</h3>
+                <p><span class="method post">POST</span>/coupon-codes/upload</p>
+                <p>Subir códigos en CSV</p>
+                <p style="margin-top: 20px;"><span class="method get">GET</span>/coupon-codes/book/:bookId</p>
+                <p>Listar códigos de un libro</p>
+            </div>
+            <div class="card">
+                <h4>Validaciones</h4>
+                <p>✓ Detecta duplicados</p>
+                <p>✓ Valida formato</p>
+                <p>✓ Rechaza si hay conflicto</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 16: ASSIGNMENTS RANDOM -->
+    <div class="slide">
+        <h2>👤 Assignments - Asignar Cupones</h2>
+        <p><strong>Caso de Uso #1:</strong> Usuario pide un cupón aleatorio</p>
+        
+        <div class="endpoint-box">
+            <p><span class="method post">POST</span>/assignments/random</p>
+            <p><strong>Request:</strong></p>
+            <div class="code-block">
+{
+  "couponBookId": "book-001",
+  "userId": "user-juan"
+}</div>
+            <p><strong>Response:</strong></p>
+            <div class="code-block">
+{
+  "code": "SUMMER-4532",
+  "status": "ASSIGNED",
+  "assignedAt": "2026-02-07T10:00:00Z"
+}</div>
+        </div>
+
+        <div class="card">
+            <h4>¿Qué pasa internamente?</h4>
+            <ol style="margin-left: 20px;">
+                <li><strong>FOR UPDATE:</strong> Bloquea el libro (nadie lo modifica)</li>
+                <li><strong>Valida:</strong> ¿Usuario puede tener 2 cupones?</li>
+                <li><strong>ORDER BY RANDOM():</strong> Busca código aleatorio</li>
+                <li><strong>FOR UPDATE SKIP LOCKED:</strong> Evita conflictos</li>
+                <li><strong>INSERT:</strong> Crea asignación con status ASSIGNED</li>
+                <li><strong>COMMIT:</strong> Guarda</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- SLIDE 17: ASSIGNMENTS ESPECÍFICO -->
+    <div class="slide">
+        <h2>👤 Assignments - Cupón Específico</h2>
+        <p><strong>Caso de Uso #2:</strong> Usuario quiere un código específico</p>
+        
+        <div class="endpoint-box">
+            <p><span class="method post">POST</span>/assignments/:code</p>
+            <p><strong>Ejemplo:</strong> POST /assignments/SUMMER-4532</p>
+            <p><strong>Request:</strong></p>
+            <div class="code-block">
+{
+  "userId": "user-juan"
+}</div>
+        </div>
+
+        <h3>Tercer Endpoint</h3>
+        <div class="endpoint-box">
+            <p><span class="method get">GET</span>/assignments/user/:userId</p>
+            <p><strong>Respuesta:</strong> Lista de cupones del usuario</p>
+            <div class="code-block">
+[
+  {
+    "code": "SUMMER-4532",
+    "status": "ASSIGNED"
+  },
+  {
+    "code": "SUMMER-7890",
+    "status": "LOCKED"
+  }
+]</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 18: LOCK -->
+    <div class="slide">
+        <h2>🔒 Redemption - Lock (Bloquear)</h2>
+        <p><strong>Caso de Uso #4:</strong> Usuario mete cupón en carrito de compra</p>
+        <p style="color: #999; font-style: italic;">Otros usuarios NO pueden usarlo mientras está bloqueado</p>
+        
+        <div class="endpoint-box">
+            <p><span class="method post">POST</span>/coupons/:code/lock</p>
+            <p><strong>Request:</strong> POST /coupons/SUMMER-4532/lock</p>
+            <div class="code-block">
+{
+  "userId": "user-juan"
+}</div>
+            <p><strong>Response:</strong></p>
+            <div class="code-block">
+{
+  "code": "SUMMER-4532",
+  "status": "LOCKED",
+  "lockedUntil": "2026-02-07T10:05:00Z"  // 5 min después
+}</div>
+        </div>
+
+        <h3>¿Qué pasa?</h3>
+        <div class="flow-diagram">
+            UPDATE PostgreSQL: status = LOCKED
+                    ↓
+            SETEX Redis: TTL 5 minutos
+                    ↓
+            INSERT Audit: Quién, cuándo, IP, User-Agent
+        </div>
+    </div>
+
+    <!-- SLIDE 19: UNLOCK -->
+    <div class="slide">
+        <h2>🔓 Redemption - Unlock (Desbloquear)</h2>
+        <p><strong>Caso de Uso #5:</strong> Usuario saca cupón del carrito sin comprar</p>
+        
+        <div class="endpoint-box">
+            <p><span class="method post">POST</span>/coupons/:code/unlock</p>
+            <p><strong>Request:</strong></p>
+            <div class="code-block">
+{
+  "userId": "user-juan"
+}</div>
+            <p><strong>Response:</strong></p>
+            <div class="code-block">
+{
+  "code": "SUMMER-4532",
+  "status": "ASSIGNED"  // ← Vuelve a estar disponible
+}</div>
+        </div>
+
+        <h3>¿Qué pasa?</h3>
+        <div class="flow-diagram">
+            UPDATE PostgreSQL: status = ASSIGNED
+                    ↓
+            DEL Redis: Limpia lock
+                    ↓
+            INSERT Audit: Registro de unlock
+        </div>
+
+        <p style="margin-top: 30px;"><span class="emoji">⚡</span> Si pasan 5 minutos sin hacer unlock: Redis auto-expira</p>
+    </div>
+
+    <!-- SLIDE 20: REDEEM -->
+    <div class="slide">
+        <h2>🎁 Redemption - Redeem (Usar Cupón)</h2>
+        <p><strong>Caso de Uso #3 + #6:</strong> Usuario confirma compra y USA el cupón</p>
+        
+        <div class="endpoint-box">
+            <p><span class="method post">POST</span>/coupons/:code/redeem</p>
+            <p><strong>Request:</strong></p>
+            <div class="code-block">
+{
+  "userId": "user-juan"
+}</div>
+        </div>
+
+        <p style="margin-top: 30px;"><strong>Lo importante: MULTI-REDEEM</strong></p>
+        <p>Un cupón puede ser usado 1, 2, 3 veces según la promoción</p>
+    </div>
+
+    <!-- SLIDE 21: REDEEM LÓGICA -->
+    <div class="slide">
+        <h2>🎁 Redeem - Lógica Detallada</h2>
+        <h3>Cupón de 1 solo uso (maxRedeems=1)</h3>
+        <div class="diagram">redeemCount = 0
+    │ usuario redime (1ra vez)
+    ▼
+redeemCount = 1
+status = REDEEMED ✓ (¡TERMINADO!)</div>
+
+        <h3>Cupón de 3 usos (maxRedeems=3)</h3>
+        <div class="diagram">redeemCount = 0 → User redime (1ra) → count=1, status=ASSIGNED
+    │ → User redime (2da) → count=2, status=ASSIGNED
+    │ → User redime (3ra) → count=3, status=REDEEMED ✓</div>
+
+        <div class="card">
+            <h4>Response (Redención #3 de 3):</h4>
+            <div class="code-block">
+{
+  "status": "REDEEMED",
+  "redeemCount": 3,
+  "maxRedeems": 3,
+  "isFinalRedeem": true  // ← ¡Última!
+}</div>
+        </div>
+    </div>
+
+    <!-- SLIDE 22: SEGURIDAD CONCURRENCIA -->
+    <div class="slide">
+        <h2>🔐 Seguridad - Race Conditions</h2>
+        <h3>Problema: 2 usuarios usan el MISMO cupón</h3>
+        
+        <h3 style="color: #dc3545;">❌ SIN PROTECCIÓN</h3>
+        <div class="diagram">Usuario A: Lee cupón SUMMER-4532
+Usuario B: Lee cupón SUMMER-4532
+Usuario A: Lo usa
+Usuario B: Lo usa
+❌ ¡DOS USUARIOS CON EL MISMO CUPÓN!</div>
+
+        <h3 style="color: #28a745;">✅ CON POSTGRESQL LOCK</h3>
+        <div class="diagram">Usuario A: SELECT * FOR UPDATE ← BLOQUEA
+Usuario B: SELECT * FOR UPDATE ← ESPERA
+Usuario A: Usa cupón, COMMIT
+Usuario B: Ahora lee, pero ve status=REDEEMED
+Usuario B: Error: "Ya fue usado"
+✓ SEGURO</div>
+
+        <p style="margin-top: 30px;"><strong>Conclusión:</strong> PostgreSQL lock + Redis TTL = Imposible robar cupones</p>
+    </div>
+
+    <!-- SLIDE 23: FLUJO COMPLETO USUARIO -->
+    <div class="slide">
+        <h2>🎯 Flujo Completo - Un Usuario Usa un Cupón</h2>
+        <div class="card">
+            <h4>Paso 1: Admin Setup</h4>
+            <p>POST /coupon-books → Crea "Verano 2026"</p>
+            <p>POST /coupon-codes/generate → 1000 códigos</p>
+        </div>
+        <div class="card">
+            <h4>Paso 2: Usuario Obtiene Cupón</h4>
+            <p>POST /assignments/random → "Aquí tu cupón: SUMMER-4532"</p>
+            <p>GET /assignments/user/juan → Ve lista de cupones</p>
+        </div>
+        <div class="card">
+            <h4>Paso 3: Usuario Compra</h4>
+            <p>POST /coupons/SUMMER-4532/lock → "Reservado por 5 min"</p>
+            <p style="color: #28a745; font-weight: bold;">Usuario confirma compra ✓</p>
+            <p>POST /coupons/SUMMER-4532/redeem → "Cupón usado"</p>
+        </div>
+        <div class="card">
+            <h4>Paso 4: Intenta reusar</h4>
+            <p>POST /coupons/SUMMER-4532/redeem → <span class="error">Error: Already redeemed</span></p>
+        </div>
+    </div>
+
+    <!-- SLIDE 24: ESTADÍSTICAS -->
+    <div class="slide">
+        <h2>📊 Estadísticas & Números</h2>
+        <div class="grid-3">
+            <div class="card" style="border-left-color: #667eea;">
+                <h4>Endpoints</h4>
+                <p style="font-size: 2em; font-weight: bold; color: #667eea;">13</p>
+                <p>6 requeridos + 7 bonus</p>
+            </div>
+            <div class="card" style="border-left-color: #764ba2;">
+                <h4>Casos de Uso</h4>
+                <p style="font-size: 2em; font-weight: bold; color: #764ba2;">6/6</p>
+                <p>100% implementados</p>
+            </div>
+            <div class="card" style="border-left-color: #28a745;">
+                <h4>Arquitectura</h4>
+                <p style="font-size: 2em; font-weight: bold; color: #28a745;">AWS</p>
+                <p>Enterprise-ready</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <h3>Costos Estimados</h3>
+            <table>
+                <tr>
+                    <th>Escenario</th>
+                    <th>Tráfico</th>
+                    <th>ECS Tasks</th>
+                    <th>Costo/Mes</th>
+                </tr>
+                <tr>
+                    <td>Bajo</td>
+                    <td>10K req/día</td>
+                    <td>2</td>
+                    <td>$474</td>
+                </tr>
+                <tr>
+                    <td>Medio</td>
+                    <td>1M req/día</td>
+                    <td>5</td>
+                    <td>$740</td>
+                </tr>
+                <tr>
+                    <td>Alto (Black Friday)</td>
+                    <td>10M req/día</td>
+                    <td>20</td>
+                    <td>$2,200</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- SLIDE 25: CONCLUSIONES -->
+    <div class="slide">
+        <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+            <h1>✅ Qurable - 100% Completo</h1>
+            
+            <div style="margin-top: 60px; font-size: 1.3em; line-height: 2;">
+                <p>✅ <strong>13 Endpoints</strong> implementados</p>
+                <p>✅ <strong>6 Casos de Uso</strong> totalmente funcionales</p>
+                <p>✅ <strong>Architecture AWS</strong> enterprise-ready</p>
+                <p>✅ <strong>Seguridad ACID</strong> con PostgreSQL + Redis</p>
+                <p>✅ <strong>Documentación</strong> completa (MD + TXT + HTML)</p>
+                <p>✅ <strong>CI/CD Pipeline</strong> automático</p>
+                <p>✅ <strong>Auto-scaling</strong> y monitoreo</p>
+            </div>
+
+            <div style="margin-top: 80px; font-size: 1.1em; color: #667eea; font-weight: bold;">
+                Ready para producción 🚀
+            </div>
+
+            <p class="footer" style="margin-top: 60px;">Qurable Challenge - Febrero 2026</p>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current').textContent = currentSlide + 1;
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

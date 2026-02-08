@@ -1,0 +1,44 @@
+Tablas y Relaciones
+===================
+
+coupon_books
+- id (UUID PK)
+- business_id (UUID)
+- name, description
+- status (DRAFT/ACTIVE/PAUSED/CLOSED)
+- max_redeems_per_user, max_codes_per_user
+- total_codes_expected, generated_count
+- expires_at
+- created_at, updated_at
+
+coupon_codes
+- id (UUID PK)
+- book_id (FK -> coupon_books.id)
+- code (unique)
+- status (AVAILABLE/ASSIGNED/LOCKED/REDEEMED/EXPIRED)
+- created_at, updated_at
+- index (book_id, status)
+
+coupon_assignments
+- id (UUID PK)
+- code_id (FK -> coupon_codes.id)
+- user_id (UUID)
+- book_id (UUID) - para queries rápidas por usuario/libro
+- assigned_at, locked_at, locked_until
+- redeemed_at, redeem_count (para multi-redeem)
+- index (user_id, book_id)
+- index (locked_until) para cleanup
+
+redemption_audit
+- id (UUID PK)
+- code_id (FK -> coupon_codes.id)
+- user_id (UUID)
+- action (LOCKED/UNLOCKED/REDEEMED)
+- status_before, status_after
+- metadata (JSONB)
+- created_at
+
+Relaciones
+- coupon_books 1:N coupon_codes
+- coupon_codes 1:N coupon_assignments
+- coupon_codes 1:N redemption_audit

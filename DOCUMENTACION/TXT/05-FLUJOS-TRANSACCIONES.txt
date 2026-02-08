@@ -1,0 +1,39 @@
+Flujos y Transacciones
+======================
+
+Flujo: crear book y generar codigos
+1) POST /coupon-books -> DRAFT
+2) PATCH /coupon-books/:id -> ACTIVE
+3) POST /coupon-codes/generate -> AVAILABLE
+
+Flujo: Lock/Unlock/Redeem
+1) Usuario tiene codigo ASSIGNED
+2) POST /coupons/:code/lock
+   - BEGIN TX + FOR UPDATE
+   - Status: ASSIGNED -> LOCKED
+   - INSERT audit (LOCK)
+   - Redis: coupon:lock:{id} EX 300
+3) Usuario completa o cancela compra
+4a) POST /coupons/:code/redeem
+    - Validar quota (maxRedeemsPerUser)
+    - Calcular: isFinalRedeem
+    - UPDATE status (si final)
+    - Incrementar redeemCount
+    - INSERT audit (REDEEM)
+    - Redis: DEL coupon:lock
+4b) POST /coupons/:code/unlock
+    - Status: LOCKED -> ASSIGNED
+    - INSERT audit (UNLOCK)
+    - Redis: DEL coupon:lock
+
+Multi-redeem
+- maxRedeemsPerUser > 1
+- Codigo se redime multiples veces
+- Solo ultima redención cambia status a REDEEMED
+
+Transiciones de estado
+- AVAILABLE -> ASSIGNED (assign)
+- ASSIGNED -> LOCKED (lock)
+- LOCKED -> REDEEMED (redeem final)
+- LOCKED -> ASSIGNED (unlock)
+- Cualquiera -> EXPIRED (si fecha pasó)

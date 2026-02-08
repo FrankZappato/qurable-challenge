@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net" modified="2026-02-05T00:00:00.000Z" agent="GitHub Copilot" version="22.1.0" type="device">
+  <diagram id="db-diagram" name="DB Diagram">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="book" value="coupon_books&#xa;- id (UUID PK)&#xa;- business_id&#xa;- name&#xa;- status&#xa;- max_redeems_per_user&#xa;- max_codes_per_user&#xa;- total_codes_expected&#xa;- generated_count&#xa;- expires_at&#xa;- created_at&#xa;- updated_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1E88E5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="300" height="230" as="geometry" />
+        </mxCell>
+
+        <mxCell id="code" value="coupon_codes&#xa;- id (UUID PK)&#xa;- book_id (FK)&#xa;- code (unique)&#xa;- status&#xa;- created_at&#xa;- updated_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#43A047;" vertex="1" parent="1">
+          <mxGeometry x="420" y="60" width="260" height="190" as="geometry" />
+        </mxCell>
+
+        <mxCell id="assign" value="coupon_assignments&#xa;- id (UUID PK)&#xa;- code_id (FK)&#xa;- user_id&#xa;- assigned_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#FB8C00;" vertex="1" parent="1">
+          <mxGeometry x="740" y="40" width="240" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="audit" value="redemption_audit&#xa;- id (UUID PK)&#xa;- code_id (FK)&#xa;- user_id&#xa;- action&#xa;- status_before&#xa;- status_after&#xa;- metadata (JSONB)&#xa;- created_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#8E24AA;" vertex="1" parent="1">
+          <mxGeometry x="740" y="230" width="240" height="190" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge1" value="1:N" style="endArrow=block;html=1;strokeColor=#1E88E5;" edge="1" parent="1" source="book" target="code">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge2" value="1:N" style="endArrow=block;html=1;strokeColor=#43A047;" edge="1" parent="1" source="code" target="assign">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge3" value="1:N" style="endArrow=block;html=1;strokeColor=#8E24AA;" edge="1" parent="1" source="code" target="audit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

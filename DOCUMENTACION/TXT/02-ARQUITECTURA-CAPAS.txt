@@ -1,0 +1,33 @@
+Arquitectura en Capas
+=====================
+
+Capas
+1) Routes (Express)
+2) Controllers
+3) Services (business logic)
+4) Repositories (data access)
+5) TypeORM + Entities
+6) PostgreSQL + Redis (cache)
+
+Motivo
+- Separacion de responsabilidades
+- Testeabilidad
+- Mantenibilidad
+- Escalabilidad
+
+Flujo Request/Response (resumen)
+- Request -> Router -> Validation (Zod) -> Controller
+- Controller llama Service
+- Service usa Repositories
+- Repository ejecuta queries via TypeORM
+- DB responde
+- Response al cliente
+
+Ejemplo asignacion (resumen)
+- Validar book activo y no expirado
+- Validar quota por usuario
+- BEGIN transaction
+- SELECT code FOR UPDATE
+- UPDATE status = ASSIGNED
+- INSERT assignment
+- COMMIT

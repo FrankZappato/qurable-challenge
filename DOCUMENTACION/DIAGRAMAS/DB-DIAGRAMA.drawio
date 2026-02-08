@@ -1,0 +1,31 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.0 Chrome/140.0.7339.249 Electron/38.7.2 Safari/537.36" version="29.3.0">
+  <diagram id="db-diagram" name="DB Diagram">
+    <mxGraphModel dx="1213" dy="828" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="book" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1E88E5;" value="&lt;font style=&quot;color: rgb(6, 6, 6);&quot;&gt;coupon_books&lt;br&gt;- id (UUID PK)&lt;br&gt;- business_id&lt;br&gt;- name&lt;br&gt;- status&lt;br&gt;- max_redeems_per_user&lt;br&gt;- max_codes_per_user&lt;br&gt;- total_codes_expected&lt;br&gt;- generated_count&lt;br&gt;- expires_at&lt;br&gt;- created_at&lt;br&gt;- updated_at&lt;/font&gt;" vertex="1">
+          <mxGeometry height="230" width="300" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="code" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#43A047;" value="&lt;font style=&quot;color: rgb(6, 6, 6);&quot;&gt;coupon_codes&lt;br&gt;- id (UUID PK)&lt;br&gt;- book_id (FK)&lt;br&gt;- code (unique)&lt;br&gt;- status&lt;br&gt;- created_at&lt;br&gt;- updated_at&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="260" x="420" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="assign" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#FB8C00;" value="&lt;font style=&quot;color: rgb(6, 6, 6);&quot;&gt;coupon_assignments&lt;br&gt;- id (UUID PK)&lt;br&gt;- code_id (FK)&lt;br&gt;- user_id&lt;br&gt;- assigned_at&lt;/font&gt;" vertex="1">
+          <mxGeometry height="150" width="240" x="740" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="audit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#8E24AA;" value="&lt;font style=&quot;color: rgb(6, 6, 6);&quot;&gt;redemption_audit&lt;br&gt;- id (UUID PK)&lt;br&gt;- code_id (FK)&lt;br&gt;- user_id&lt;br&gt;- action&lt;br&gt;- status_before&lt;br&gt;- status_after&lt;br&gt;- metadata (JSONB)&lt;br&gt;- created_at&lt;/font&gt;" vertex="1">
+          <mxGeometry height="190" width="240" x="740" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" edge="1" parent="1" source="book" style="endArrow=block;html=1;strokeColor=#1E88E5;" target="code" value="1:N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" edge="1" parent="1" source="code" style="endArrow=block;html=1;strokeColor=#43A047;" target="assign" value="1:N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" edge="1" parent="1" source="code" style="endArrow=block;html=1;strokeColor=#8E24AA;" target="audit" value="1:N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

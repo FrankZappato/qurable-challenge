@@ -1,0 +1,40 @@
+Qurable Coupon Service - Vision General
+=======================================
+
+Que es?
+- Sistema de gestion de cupones/codigos de descuento para empresas.
+- Permite crear campañas, generar codigos, asignar a usuarios y redimir.
+
+Stack Tecnologico
+- Node.js 18+: runtime
+- Express 4.18: API HTTP
+- TypeScript 5.3: type safety
+- PostgreSQL 15: base de datos relacional
+- TypeORM 0.3: ORM
+- Redis 7: cache (preparado)
+- Zod 3.22: validacion runtime
+- Docker + Compose: entorno local
+
+Estados
+- CouponBook: DRAFT, ACTIVE, PAUSED, CLOSED
+- CouponCode: AVAILABLE, ASSIGNED, LOCKED, REDEEMED, EXPIRED
+
+Flujo tipico
+1) Crear campaign (coupon book)
+2) Activar campaign
+3) Generar codigos
+4) Asignar codigo a usuario
+5) (Pendiente) Lock temporal
+6) (Pendiente) Redimir
+
+Seguridad y consistencia
+- Transactions ACID
+- Pessimistic locking (FOR UPDATE)
+- Validacion con Zod
+- Errores tipados
+
+Pendientes
+- (Próximamente) Cleanup job para códigos LOCKED expirados
+- Unit Tests
+- Integration Tests
+- Statistics endpoints

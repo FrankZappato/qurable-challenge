@@ -1,0 +1,318 @@
+{
+  "info": {
+    "_postman_id": "qurable-challenge-2026",
+    "name": "Qurable - Sistema de Gestión de Cupones",
+    "description": "API completa con 13 endpoints para gestionar cupones, asignaciones y redenciones",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🏥 Health Check",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/v1/ping",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "ping"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📚 Coupon Books",
+      "item": [
+        {
+          "name": "POST /coupon-books (Crear)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"businessId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"name\": \"Verano 2026\",\n  \"description\": \"Cupones de descuento verano\",\n  \"maxRedeemsPerUser\": 1,\n  \"maxCodesPerUser\": 2,\n  \"totalCodesExpected\": 1000,\n  \"expiresAt\": \"2026-12-31T23:59:59Z\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupon-books",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupon-books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /coupon-books (Listar)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupon-books",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupon-books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /coupon-books/:id (Obtener uno)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupon-books/book-id-aqui",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupon-books", "book-id-aqui"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💳 Coupon Codes",
+      "item": [
+        {
+          "name": "POST /coupon-codes/generate (Generar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"couponBookId\": \"book-id-aqui\",\n  \"quantity\": 100,\n  \"pattern\": \"SUMMER-{XXXX}\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupon-codes/generate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupon-codes", "generate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /coupon-codes/upload (Subir CSV)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "couponBookId",
+                  "value": "book-id-aqui",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupon-codes/upload",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupon-codes", "upload"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /coupon-codes/book/:bookId (Listar)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupon-codes/book/book-id-aqui?status=AVAILABLE&limit=50",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupon-codes", "book", "book-id-aqui"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "AVAILABLE"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👤 Assignments",
+      "item": [
+        {
+          "name": "POST /assignments/random (Aleatorio)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"couponBookId\": \"book-id-aqui\",\n  \"userId\": \"user-juan\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/assignments/random",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "assignments", "random"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /assignments/:code (Específico)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/assignments/SUMMER-1234",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "assignments", "SUMMER-1234"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /assignments/user/:userId (Listar mis cupones)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/v1/assignments/user/user-juan",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "assignments", "user", "user-juan"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔒 Redemption (Lock/Unlock/Redeem)",
+      "item": [
+        {
+          "name": "POST /coupons/:code/lock (Bloquear)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupons/SUMMER-1234/lock",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupons", "SUMMER-1234", "lock"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /coupons/:code/unlock (Desbloquear)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupons/SUMMER-1234/unlock",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupons", "SUMMER-1234", "unlock"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /coupons/:code/redeem (Usar cupón)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user-juan\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/v1/coupons/SUMMER-1234/redeem",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "coupons", "SUMMER-1234", "redeem"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

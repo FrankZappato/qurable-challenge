@@ -1,0 +1,27 @@
+Setup y Startup
+===============
+
+Prerequisitos
+- Node.js 18+
+- npm 9+
+- Docker + Compose
+
+Instalacion
+1) npm install
+2) cp .env.example .env
+3) docker compose up -d
+4) npm run dev
+
+Scripts
+- npm run dev
+- npm run build
+- npm start
+- npm run type-check
+- npm run migration:run
+- npm run migration:revert
+
+Servicios
+- API: http://localhost:3000/api/v1
+- PostgreSQL: localhost:5432
+- Redis: localhost:6379
+- pgAdmin: http://localhost:5050
