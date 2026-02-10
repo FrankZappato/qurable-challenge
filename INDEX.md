@@ -2,17 +2,12 @@
 
 ## 🎯 Getting Started (Pick One)
 
-1. **[NEXT_STEPS.md](./NEXT_STEPS.md)** ← **START HERE!**
-   - Your immediate next action
-   - 7-step infrastructure setup guide
-   - Expected time: 30 minutes
-
-2. **[SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md)**
+1. **[SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md)**
    - Detailed checklist with checkboxes
    - Troubleshooting section
    - Verification steps
 
-3. **[STATUS.md](./STATUS.md)**
+2. **[STATUS.md](./STATUS.md)**
    - Project completion status
    - What's done, what's pending
    - Timeline overview
@@ -106,7 +101,6 @@ qurable-challenge/
 
 | Task | Document |
 |------|----------|
-| Set up the project | [NEXT_STEPS.md](./NEXT_STEPS.md) |
 | Verify my setup | [SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md) |
 | Find a command | [QUICK_COMMANDS.md](./QUICK_COMMANDS.md) |
 | Understand architecture | [docs/SYSTEM_ANALYSIS.md](./docs/SYSTEM_ANALYSIS.md) |
@@ -121,7 +115,7 @@ qurable-challenge/
 
 | Role | Start With |
 |------|-----------|
-| New developer | 1. [README.md](./README.md) → 2. [NEXT_STEPS.md](./NEXT_STEPS.md) |
+| New developer | 1. [README.md](./README.md) |
 | DevOps/Infrastructure | [docs/SETUP_DOCKER_SUPABASE_UPSTASH.md](./docs/SETUP_DOCKER_SUPABASE_UPSTASH.md) |
 | Backend developer | [PROJECT_GUIDE.md](./PROJECT_GUIDE.md) → [docs/API_DESIGN.md](./docs/API_DESIGN.md) |
 | QA/Tester | [docs/4_DAY_ROADMAP.md](./docs/4_DAY_ROADMAP.md) → [SETUP_CHECKLIST.md](./SETUP_CHECKLIST.md) |
@@ -135,9 +129,8 @@ qurable-challenge/
 ### First-Time Setup (30 minutes)
 ```
 1. Read: README.md (2 min)
-2. Read: NEXT_STEPS.md (3 min)
-3. Follow: SETUP_CHECKLIST.md (20 min)
-4. Verify: npm run dev (5 min)
+2. Follow: SETUP_CHECKLIST.md (20 min)
+3. Verify: npm run dev (5 min)
 ```
 
 ### Daily Development (Start of Day)
@@ -170,7 +163,6 @@ qurable-challenge/
 
 | Document | Type | Size | Purpose |
 |----------|------|------|---------|
-| NEXT_STEPS.md | Setup | ~2.5 KB | Immediate next action |
 | SETUP_CHECKLIST.md | Checklist | ~6 KB | Detailed setup steps |
 | PROJECT_GUIDE.md | Reference | ~8 KB | Directory & structure |
 | QUICK_COMMANDS.md | Reference | ~7 KB | All npm commands |
@@ -188,7 +180,6 @@ qurable-challenge/
 ## ✅ Checklist for New Team Member
 
 - [ ] Read [README.md](./README.md)
-- [ ] Bookmark [NEXT_STEPS.md](./NEXT_STEPS.md)
 - [ ] Bookmark [QUICK_COMMANDS.md](./QUICK_COMMANDS.md)
 - [ ] Bookmark [PROJECT_GUIDE.md](./PROJECT_GUIDE.md)
 - [ ] Bookmark [docs/SYSTEM_ANALYSIS.md](./docs/SYSTEM_ANALYSIS.md)
@@ -234,10 +225,6 @@ qurable-challenge/
 - **Timeline**: [docs/4_DAY_ROADMAP.md](./docs/4_DAY_ROADMAP.md)
 
 ---
-
-## 🎯 Your Next Action
-
-👉 **Open [NEXT_STEPS.md](./NEXT_STEPS.md) and follow the 7-step setup guide!**
 
 Expected time: 30 minutes to get server running.
 

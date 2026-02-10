@@ -181,8 +181,6 @@ npm run docker:logs      # View Docker logs
 
 ## 🎯 Next Immediate Action
 
-👉 **[Open NEXT_STEPS.md](./NEXT_STEPS.md)** for the 7-step infrastructure setup guide
-
 **TL;DR:**
 1. Install Docker Desktop ✅ (if needed)
 2. Create Supabase account → Copy connection string
@@ -244,5 +242,3 @@ await cacheService.set(`available:${bookId}`, 100, 3600); // 1 hour TTL
 | What's the project status? | See tracking | [docs/PROJECT_STATUS.md](./docs/PROJECT_STATUS.md) |
 
 ---
-
-**🎊 You're ready to go! Follow NEXT_STEPS.md to get started! 🚀**
